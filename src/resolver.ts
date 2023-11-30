@@ -13,6 +13,16 @@ type Game = {
 	platform: string[];
 };
 
+interface UpdateGameResolverArgs {
+	id: string;
+	edits: UpdateGameResolverArgs;
+}
+
+type UpdateGameType = {
+	title?: string;
+	platform?: string[];
+};
+
 // Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
 	Query: {
@@ -49,6 +59,17 @@ const resolvers = {
 			const game = { ...args.game, id: Date.now().toString() };
 			_db.games = _db.games.concat(game);
 			return game;
+		},
+		updateGame: (_: any, args: UpdateGameResolverArgs) => {
+			const originalGame = _db.games.find((game) => game.id === args.id);
+			const updatedGame = { ...originalGame, ...args.edits };
+			_db.games = _db.games.map((game) => {
+				if (game.id === args.id) {
+					game = updatedGame;
+				}
+				return game;
+			});
+			return updatedGame;
 		},
 	},
 };
