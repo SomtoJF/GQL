@@ -17,5 +17,18 @@ const resolvers = {
 		author: (_: any, args: ResolverArgs) =>
 			_db.authors.find((author) => args.id === author.id),
 	},
+	Game: {
+		reviews: (parent: any) =>
+			_db.reviews.filter((review) => review.game_id === parent.id),
+	},
+	Author: {
+		reviews: (parent: any) =>
+			_db.reviews.filter((review) => review.author_id === parent.id),
+	},
+	Review: {
+		author: (parent: any) =>
+			_db.authors.find((author) => author.id === parent.author_id),
+		game: (parent: any) => _db.games.find((game) => game.id === parent.game_id),
+	},
 };
 export default resolvers;
