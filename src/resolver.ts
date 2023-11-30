@@ -4,6 +4,15 @@ interface ResolverArgs {
 	id: string;
 }
 
+interface AddGameInputResolverArgs {
+	game: Game;
+}
+
+type Game = {
+	title: string;
+	platform: string[];
+};
+
 // Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
 	Query: {
@@ -29,6 +38,18 @@ const resolvers = {
 		author: (parent: any) =>
 			_db.authors.find((author) => author.id === parent.author_id),
 		game: (parent: any) => _db.games.find((game) => game.id === parent.game_id),
+	},
+	Mutation: {
+		deleteGame: (_: any, args: ResolverArgs) => {
+			const game = _db.games.find((item) => item.id === args.id);
+			_db.games = _db.games.filter((game) => game.id !== args.id);
+			return game;
+		},
+		addGame: (_: any, args: AddGameInputResolverArgs) => {
+			const game = { ...args.game, id: Date.now().toString() };
+			_db.games = _db.games.concat(game);
+			return game;
+		},
 	},
 };
 export default resolvers;

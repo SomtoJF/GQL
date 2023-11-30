@@ -28,5 +28,15 @@ type Query{
     game(id: ID!): Game 
     review(id: ID!): Review
     author(id: ID!): Author
+}
+
+type Mutation{
+    deleteGame(id: ID!): Game
+    addGame(game: AddGameInput): Game
+}
+
+input AddGameInput{
+    title: String!
+    platform: [String!]!
 }`;
 export default typeDefs;

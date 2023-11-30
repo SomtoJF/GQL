@@ -19,5 +19,17 @@ const resolvers = {
         author: (parent) => _db.authors.find((author) => author.id === parent.author_id),
         game: (parent) => _db.games.find((game) => game.id === parent.game_id),
     },
+    Mutation: {
+        deleteGame: (_, args) => {
+            const game = _db.games.find((item) => item.id === args.id);
+            _db.games = _db.games.filter((game) => game.id !== args.id);
+            return game;
+        },
+        addGame: (_, args) => {
+            const game = { ...args.game, id: Date.now().toString() };
+            _db.games = _db.games.concat(game);
+            return game;
+        },
+    },
 };
 export default resolvers;
